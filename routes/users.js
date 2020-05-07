@@ -1,21 +1,40 @@
 const usersRouter = require('express').Router();
-const users = require('../data/users.json');
+const path = require('path');
+const fs = require('fs');
 
-function findUser(id) {
-  return users.filter((user) => user._id === id);
+const fsPromises = fs.promises;
+
+async function getUsers() {
+  const filePath = path.join(__dirname, '../data/users.json');
+  const users = await fsPromises.readFile(filePath, 'utf8').catch((err) => {
+    throw err;
+  });
+  return users;
 }
 
 usersRouter.get('/', (req, res) => {
-  res.send(users);
+  getUsers()
+    .then((users) => {
+      res.send(users);
+    })
+    .catch((err) => {
+      console.log('Что-то пошло не так при загрузке пользователей. ', err);
+    });
 });
 
 usersRouter.get('/:id', (req, res) => {
-  const user = findUser(req.params.id);
-  if (!user || !user.length) {
-    res.status(404).send({ message: 'Нет пользователя с таким id' });
-    return;
-  }
-  res.send(user);
+  getUsers()
+    .then((users) => {
+      const user = JSON.parse(users).filter((item) => item._id === req.params.id);
+
+      if (!user || !user.length) {
+        res.status(404).send({ message: 'Нет пользователя с таким id' });
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      console.log('Что-то пошло не так при загрузке пользователей. ', err);
+    });
 });
 
 module.exports = usersRouter;
