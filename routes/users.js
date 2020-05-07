@@ -15,7 +15,7 @@ async function getUsers() {
 usersRouter.get('/', (req, res) => {
   getUsers()
     .then((users) => {
-      res.send(users);
+      res.send(JSON.parse(users));
     })
     .catch((err) => {
       console.log('Что-то пошло не так при загрузке пользователей. ', err);
@@ -29,8 +29,9 @@ usersRouter.get('/:id', (req, res) => {
 
       if (!user || !user.length) {
         res.status(404).send({ message: 'Нет пользователя с таким id' });
+      } else {
+        res.send(user);
       }
-      res.send(user);
     })
     .catch((err) => {
       console.log('Что-то пошло не так при загрузке пользователей. ', err);
