@@ -19,6 +19,7 @@ usersRouter.get('/', (req, res) => {
     })
     .catch((err) => {
       console.log('Что-то пошло не так при загрузке пользователей. ', err);
+      next(err);
     });
 });
 
@@ -35,6 +36,7 @@ usersRouter.get('/:id', (req, res) => {
     })
     .catch((err) => {
       console.log('Что-то пошло не так при загрузке пользователей. ', err);
+      next(err);
     });
 });
 

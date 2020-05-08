@@ -19,6 +19,7 @@ cardsRouter.get('/', (req, res) => {
     })
     .catch((err) => {
       console.log('Что-то пошло не так при загрузке карточек. ', err);
+      next(err);
     });
 });
 
