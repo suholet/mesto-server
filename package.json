@@ -1,6 +1,6 @@
 {
   "name": "mesto-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The server for Mesto frontend",
   "main": "app.js",
   "scripts": {

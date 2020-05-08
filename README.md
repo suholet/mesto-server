@@ -1,4 +1,16 @@
-# Проектная работа 12
-Сервер для верски проекта Mesto.
+# mesto-server
+A REST API for the Mesto project.
 
-Версия проекта v0.0.1.
+## Users
+Retrive all users' data
+`GET /users/`
+
+Retrive a user's data by id
+`GET /users/:id`
+
+## Cards
+Retrive all cards' data
+`GET /cards/`
+
+---
+Project version 0.0.2.
