@@ -1,0 +1,30 @@
+{
+  "name": "mesto-server",
+  "version": "0.0.2",
+  "description": "The server for Mesto frontend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suholet/mesto-server.git"
+  },
+  "author": "Dmitry Suholet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suholet/mesto-server/issues"
+  },
+  "homepage": "https://github.com/suholet/mesto-server#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
