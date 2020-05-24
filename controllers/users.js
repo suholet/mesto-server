@@ -34,3 +34,25 @@ module.exports.createUser = (req, res, next) => {
       next(err);
     });
 };
+
+module.exports.updateProfile = (req, res, next) => {
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { name, about })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      console.log('Что-то пошло не так при обновлении профиля пользователя. ', err);
+      next(err);
+    });
+};
+
+module.exports.updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(req.user._id, { avatar })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => {
+      console.log('Что-то пошло не так при обновлении аватара пользователя. ', err);
+      next(err);
+    });
+};
