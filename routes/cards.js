@@ -12,7 +12,7 @@ async function getCards() {
   return cards;
 }
 
-cardsRouter.get('/', (req, res) => {
+cardsRouter.get('/', (req, res, next) => {
   getCards()
     .then((cards) => {
       res.send(JSON.parse(cards));

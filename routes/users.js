@@ -12,7 +12,7 @@ async function getUsers() {
   return users;
 }
 
-usersRouter.get('/', (req, res) => {
+usersRouter.get('/', (req, res, next) => {
   getUsers()
     .then((users) => {
       res.send(JSON.parse(users));
@@ -23,7 +23,7 @@ usersRouter.get('/', (req, res) => {
     });
 });
 
-usersRouter.get('/:id', (req, res) => {
+usersRouter.get('/:id', (req, res, next) => {
   getUsers()
     .then((users) => {
       const user = JSON.parse(users).filter((item) => item._id === req.params.id);
