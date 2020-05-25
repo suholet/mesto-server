@@ -40,3 +40,40 @@ module.exports.deleteCard = (req, res, next) => {
       next(err);
     });
 };
+
+module.exports.likeCard = (req, res, next) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId, {
+      $addToSet: {
+        likes: req.user._id,
+      },
+    },
+    {
+      new: true,
+    },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.log('Что-то пошло не так при лайке карточки. ', err);
+      next(err);
+    });
+};
+
+module.exports.dislikeCard = (req, res, next) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    {
+      $pull: {
+        likes: req.user._id,
+      },
+    },
+    {
+      new: true,
+    },
+  )
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      console.log('Что-то пошло не так при дизлайке карточки. ', err);
+      next(err);
+    });
+};
