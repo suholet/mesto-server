@@ -32,7 +32,7 @@ app.use('/cards', cardsRouter);
 app.use('*', router);
 
 // 500 error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).send({ err });
 });

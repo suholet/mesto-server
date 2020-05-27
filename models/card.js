@@ -11,10 +11,10 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
+      validator(v) {
         return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
       },
-      message: props => `${props.value} is not a valid link!`,
+      message: (props) => `${props.value} is not a valid link!`,
     },
   },
   owner: {
