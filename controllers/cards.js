@@ -33,7 +33,13 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove({ _id: req.params.cardId })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (card) {
+        res.send({ data: card });
+      } else {
+        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+      }
+    })
     .catch((err) => {
       console.log('Что-то пошло не так при удалении карточки. ', err);
       next(err);
