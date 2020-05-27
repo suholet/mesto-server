@@ -41,17 +41,23 @@ module.exports.deleteCard = (req, res, next) => {
 };
 
 module.exports.likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId, {
-      $addToSet: {
-        likes: req.user._id,
-      },
+  const update = {
+    $addToSet: {
+      likes: req.user._id,
     },
-    {
-      new: true,
-    },
-  )
-    .then((card) => res.send({ data: card }))
+  };
+  const opts = {
+    new: true,
+  };
+  Card.findByIdAndUpdate(req.params.cardId, update, opts)
+    .then((card) => {
+      console.log(card);
+      if (card) {
+        res.send({ data: card });
+      } else {
+        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+      }
+    })
     .catch((err) => {
       console.log('Что-то пошло не так при лайке карточки. ', err);
       next(err);
@@ -59,18 +65,23 @@ module.exports.likeCard = (req, res, next) => {
 };
 
 module.exports.dislikeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    {
-      $pull: {
-        likes: req.user._id,
-      },
+  const update = {
+    $pull: {
+      likes: req.user._id,
     },
-    {
-      new: true,
-    },
-  )
-    .then((card) => res.send({ data: card }))
+  };
+  const opts = {
+    new: true,
+  };
+  Card.findByIdAndUpdate(req.params.cardId, update, opts)
+    .then((card) => {
+      console.log(card);
+      if (card) {
+        res.send({ data: card });
+      } else {
+        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+      }
+    })
     .catch((err) => {
       console.log('Что-то пошло не так при дизлайке карточки. ', err);
       next(err);

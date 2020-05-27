@@ -24,7 +24,7 @@ const cardSchema = new mongoose.Schema({
   },
   likes: {
     type: mongoose.Schema.Types.ObjectId,
-    enum: [],
+    enum: [null],
   },
   createdAt: {
     type: Date,

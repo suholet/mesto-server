@@ -40,8 +40,9 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('*', router);
 
+
 // 500 error handler
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send({ message: err.message });
 });
