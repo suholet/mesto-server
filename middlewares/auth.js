@@ -6,13 +6,18 @@ const handleAuthError = (res) => {
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
-  const { authHeaders } = req.headers;
+  // const { authHeaders } = req.headers;
 
-  if (!authHeaders || !authHeaders.startsWith('Bearer')) {
+  // if (!authHeaders || !authHeaders.startsWith('Bearer')) {
+  //   return handleAuthError(res);
+  // }
+
+  // const token = authHeaders.replace('Bearer ', '');
+  const token = req.cookies.jwt;
+  if (!token) {
     return handleAuthError(res);
   }
 
-  const token = authHeaders.replace('Bearer ', '');
   let payload;
   try {
     payload = jwt.verify(token, 'HASH');

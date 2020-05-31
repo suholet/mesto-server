@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const router = require('./routes/router');
@@ -19,6 +20,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 app.use(helmet());
+app.use(cookieParser());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -43,7 +45,7 @@ app.post('/signup', createUser);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
-app.use('*', router);
+app.use('*', auth, router);
 
 
 // 500 error handler
