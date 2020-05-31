@@ -6,6 +6,9 @@ const rateLimit = require('express-rate-limit');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const router = require('./routes/router');
+const { createUser, login } = require('./controllers/users');
+
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -29,15 +32,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // temporary auth stub
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5ecaa4322383ec8133d124a3',
-  };
-  next();
-});
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '5ecaa4322383ec8133d124a3',
+//   };
+//   next();
+// });
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 app.use('*', router);
 
 
