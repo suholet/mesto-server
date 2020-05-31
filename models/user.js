@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { isEmail, isURL } = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,10 +19,25 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
+        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
+        return isURL(v);
       },
       message: (props) => `${props.value} is not a valid link!`,
     },
+  },
+  email: {
+    type: String,
+    required: true,
+    validate: {
+      validator(v) {
+        return isEmail(v);
+      },
+      message: (props) => `${props.value} is not a valid email!`,
+    },
+  },
+  password: {
+    type: String,
+    required: true,
   },
 });
 
