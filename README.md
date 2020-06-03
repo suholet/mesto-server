@@ -2,14 +2,17 @@
 A REST API for the Mesto project.
 
 ## Users
+Register new user
+`POST /signup`
+
+Sign in
+`POST /signin`
+
 Retrive all users' data
 `GET /users`
 
 Retrive user's data
 `GET /users/:id`
-
-Create user
-`POST /users`
 
 Update name and about
 `PATCH /users/me`
@@ -33,4 +36,4 @@ Like card
 Dislike card
 `DELETE /cards/:cardId/likes`
 ---
-Project version 0.0.3.
+Project version 0.0.4.
