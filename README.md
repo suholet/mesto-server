@@ -35,5 +35,6 @@ Like card
 
 Dislike card
 `DELETE /cards/:cardId/likes`
+
 ---
 Project version 0.0.4.
