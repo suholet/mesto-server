@@ -11,7 +11,9 @@ const { createUser, login } = require('./controllers/users');
 
 const auth = require('./middlewares/auth');
 
-const { PORT = 3000 } = process.env;
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 const limiter = rateLimit({
