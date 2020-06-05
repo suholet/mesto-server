@@ -5,7 +5,6 @@ module.exports.getCards = (req, res, next) => {
     .populate('owner')
     .then((cards) => res.send(cards))
     .catch((err) => {
-      console.log('Что-то пошло не так при загрузке карточек. ', err);
       next(err);
     });
 };
@@ -26,7 +25,6 @@ module.exports.createCard = (req, res, next) => {
   })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      console.log('Что-то пошло не так при создании карточки. ', err);
       next(err);
     });
 };
@@ -42,7 +40,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при удалении карточки. ', err);
       next(err);
     });
 };
@@ -58,7 +55,6 @@ module.exports.likeCard = (req, res, next) => {
   };
   Card.findByIdAndUpdate(req.params.cardId, update, opts)
     .then((card) => {
-      console.log(card);
       if (card) {
         res.send({ data: card });
       } else {
@@ -66,7 +62,6 @@ module.exports.likeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при лайке карточки. ', err);
       next(err);
     });
 };
@@ -82,7 +77,6 @@ module.exports.dislikeCard = (req, res, next) => {
   };
   Card.findByIdAndUpdate(req.params.cardId, update, opts)
     .then((card) => {
-      console.log(card);
       if (card) {
         res.send({ data: card });
       } else {
@@ -90,7 +84,6 @@ module.exports.dislikeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при дизлайке карточки. ', err);
       next(err);
     });
 };

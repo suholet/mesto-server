@@ -49,9 +49,10 @@ app.use('*', auth, router);
 
 
 // 500 error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
+app.use((err, req, res) => {
+  // console.error(err.stack);
   res.status(500).send({ message: err.message });
 });
 
-app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
+// app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
+app.listen(PORT);

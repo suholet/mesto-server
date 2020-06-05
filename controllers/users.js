@@ -6,7 +6,6 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
     .catch((err) => {
-      console.log('Что-то пошло не так при загрузке пользователей. ', err);
       next(err);
     });
 };
@@ -21,7 +20,6 @@ module.exports.getUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при загрузке пользователя. ', err);
       next(err);
     });
 };
@@ -45,7 +43,6 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      console.log('Что-то пошло не так при создании пользователя. ', err);
       next(err);
     });
 };
@@ -56,7 +53,6 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, about })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      console.log('Что-то пошло не так при обновлении профиля пользователя. ', err);
       next(err);
     });
 };
@@ -67,12 +63,11 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      console.log('Что-то пошло не так при обновлении аватара пользователя. ', err);
       next(err);
     });
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
