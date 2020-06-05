@@ -14,6 +14,7 @@ const auth = require('./middlewares/auth');
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost:27017/mestodb';
 const app = express();
 
 const limiter = rateLimit({
@@ -24,7 +25,7 @@ app.use(limiter);
 app.use(helmet());
 app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
