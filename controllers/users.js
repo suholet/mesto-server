@@ -56,7 +56,11 @@ module.exports.createUser = (req, res, next) => {
       },
     ))
     .catch((err) => {
-      next(err);
+      if (err.code === 11000) {
+        res.status(409).send({ message: err.errmsg });
+      } else {
+        next(err);
+      }
     });
 };
 
