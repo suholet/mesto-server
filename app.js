@@ -52,7 +52,8 @@ app.use('*', auth, router);
 
 
 // 500 error handler
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   // console.error(err.stack);
   res.status(500).send({ message: err.message });
 });

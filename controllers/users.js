@@ -45,7 +45,16 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(
+      {
+        data: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        },
+      },
+    ))
     .catch((err) => {
       next(err);
     });
@@ -53,8 +62,15 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
+  const update = {
+    $pull: { name, about },
+  };
+  const opts = {
+    new: true,
+    runValidators: true,
+  };
 
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, update, opts)
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       next(err);
@@ -63,8 +79,15 @@ module.exports.updateProfile = (req, res, next) => {
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  const update = {
+    $pull: { avatar },
+  };
+  const opts = {
+    new: true,
+    runValidators: true,
+  };
 
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, update, opts)
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       next(err);
