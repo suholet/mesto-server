@@ -58,7 +58,7 @@ module.exports.likeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
@@ -80,7 +80,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
