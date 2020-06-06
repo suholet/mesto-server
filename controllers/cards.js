@@ -30,13 +30,17 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findOneAndRemove({ _id: req.params.cardId, owner: req.user._id })
-  // Card.findByIdAndRemove(req.params.cardId, { owner: req.user._id })
+  // { _id: req.params.cardId, owner: req.user._id }
+  Card.findById(req.params.cardId)
+    .orFail(() => {
+      res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+    })
     .then((card) => {
-      if (card) {
+      if (JSON.stringify(card.owner) === JSON.stringify(req.user._id)) {
+        card.remove();
         res.send({ data: card });
       } else {
-        res.status(404).send({ message: `Что-то пошло не так при удалении карточки с id:${req.params.cardId}!` });
+        res.status(403).send({ message: `У вас нет прав на удаление карточки с id:${req.params.cardId}!` });
       }
     })
     .catch((err) => {
