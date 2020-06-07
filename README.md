@@ -1,40 +1,113 @@
-# mesto-server
-A REST API for the Mesto project.
+# Сервер Mesto
+Серверная чась проекта Mesto. Нужна для работы с пользователями и карточками различных географических мест. Пользователи могут регистрироваться на сайте, создавать свои карточки, просматривать и лайкать карточки других пользователей. 
 
-## Users
-Register new user
-`POST /signup`
+## Подготовка к работе
+Сервер Mesto представляет из себя базу данных и набор методов REST API для работы с ней. 
 
-Sign in
-`POST /signin`
+### Внешние компоненты
+Для работы с проектом вам понадобятся git, NodeJS
+* [Как установить git.](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Как установить NodeJS.](https://nodejs.org/en/download/package-manager/)
 
-Retrive all users' data
-`GET /users`
+База данных реализована на основе MongoDB. Перед началом работы с проектом, вам надо убедиться, что этот компонент установлен и запущен на вашей машине. 
 
-Retrive user's data
-`GET /users/:id`
+Чтобы развернуть проект на локальной машине вам нужно установить MongoDB на свой компьютер. Как это сделать можно узнать в [официальной инструкции](https://docs.mongodb.com/manual/administration/install-community/).
 
-Update name and about
-`PATCH /users/me`
+### Локальная установка
+В командной строке перейдите в папку, где будет развернут проект. После чего скопируйте его с GitHub
+```shell
+$ git clone https://github.com/suholet/mesto-server.git
+``` 
+Далее перейти в папку с проектом и установить все компоненты от которых зависит проект
+```shell
+$ cd mesto-server
+$ npm install
+``` 
+После этого можно запустить сервер для работы с API
+```shell
+$ npm run start
+```
+Сервер поднимется по адресу `http://localhost:3000`. Теперь вы можете использовать API для создания пользователей и карточек. Не забудьте проверить, что MongoDB запущена и к ней можно обратиться по адресу `mongodb://localhost:27017`.
 
-Update avatar
-`PATCH /users/me/avatar`
+## Методы REST API
 
-## Cards
-Retrive all cards' data
-`GET /cards`
+### Аутентификация
+Зарегистрировать нового пользователя
+```
+POST /signup
+{
+    "name": "Имя пользователя",
+    "about": "Краткое био",
+    "avatar": "https://img.jpg",
+    "email": "test@yandex.ru",
+    "password": "testpwd"
+}
+```
 
-Create card
-`POST /cards`
+Войти в аккаунт
+```
+POST /signin
+{
+    "email": "test1@yandex.ru",
+    "password": "qwe123qwe123qwe"
+}
+```
 
-Delete card
-`DELETE /cards/:cardId`
+### Работа с данными пользователей
+Получить данные обо всех пользователях
+```
+GET /users
+```
 
-Like card
-`PUT /cards/:cardId/likes`
+Получить данные по пользователю по id
+```
+GET /users/:id
+```
 
-Dislike card
-`DELETE /cards/:cardId/likes`
+Обновить имя и описание
+```
+PATCH /users/me
+{
+    "name": "Новое имя",
+    "about": "Обновленное био"
+}
+```
 
----
-Project version 0.0.4.
+Обновить ссылку на аватар
+```
+PATCH /users/me/avatar
+{
+    "avatar": "https://newimg.jpg"
+}
+```
+
+## Работа с данными карточек
+Получить данные всех карточек
+```
+GET /cards
+```
+
+Создать новую карточку
+```
+POST /cards
+{
+    "name": "Название места",
+    "about": "Краткое описание",
+    "link": "https://cardimg.jpg"
+}
+```
+
+Удалить карточку
+```
+DELETE /cards/:cardId
+```
+
+Поставить лайк карточке
+```
+PUT /cards/:cardId/likes
+```
+
+Удалить лайк у карточки
+```
+DELETE /cards/:cardId/likes
+```
