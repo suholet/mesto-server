@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/notFoundError');
+const UnathorizedError = require('../errors/unathorizedError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,7 +18,8 @@ module.exports.getUser = (req, res, next) => {
   User.find({ _id: req.params.id })
     .then((user) => {
       if (!user || !user.length) {
-        res.status(404).send({ message: 'Нет пользователя с таким id' });
+        throw new NotFoundError('Нет пользователя с таким id');
+        // res.status(404).send({ message: 'Нет пользователя с таким id' });
       } else {
         res.send(user);
       }
@@ -111,5 +114,8 @@ module.exports.login = (req, res) => {
         .end();
       // res.send({ token });
     })
-    .catch((err) => res.status(401).send({ message: err.message }));
+    .catch((err) => {
+      throw new UnathorizedError(err.message);
+      // res.status(401).send({ message: err.message });
+    });
 };

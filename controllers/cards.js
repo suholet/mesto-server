@@ -1,5 +1,6 @@
 const Card = require('../models/card');
-const CardNotFoundError = require('../errors/cardNotFoundError');
+const NotFoundError = require('../errors/notFoundError');
+const AccessDeniedError = require('../errors/accessDeniedError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -34,7 +35,7 @@ module.exports.deleteCard = (req, res, next) => {
   // { _id: req.params.cardId, owner: req.user._id }
   Card.findById(req.params.cardId)
     .orFail(() => {
-      throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+      throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
       // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
     })
     .then((card) => {
@@ -42,7 +43,8 @@ module.exports.deleteCard = (req, res, next) => {
         card.remove();
         res.send({ data: card });
       } else {
-        res.status(403).send({ message: `У вас нет прав на удаление карточки с id:${req.params.cardId}!` });
+        throw new AccessDeniedError(`У вас нет прав на удаление карточки с id:${req.params.cardId}!`);
+        // res.status(403).send({ message: `нет прав на удаление карточки!`});
       }
     })
     .catch((err) => {
@@ -64,7 +66,7 @@ module.exports.likeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
         // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
@@ -87,7 +89,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
         // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
