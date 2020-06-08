@@ -36,7 +36,7 @@ module.exports.deleteCard = (req, res, next) => {
       res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
     })
     .then((card) => {
-      if (JSON.stringify(card.owner) === JSON.stringify(req.user._id)) {
+      if (card.owner.equals(req.user._id)) {
         card.remove();
         res.send({ data: card });
       } else {
