@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 const UnathorizedError = require('../errors/unathorizedError');
+const AlreadyExistError = require('../errors/alreadyExistError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -58,7 +59,8 @@ module.exports.createUser = (req, res, next) => {
     ))
     .catch((err) => {
       if (err.code === 11000) {
-        res.status(409).send({ message: err.errmsg });
+        throw new AlreadyExistError(err.errmsg);
+        // res.status(409).send({ message: err.errmsg });
       } else {
         next(err);
       }
