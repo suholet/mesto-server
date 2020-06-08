@@ -64,9 +64,7 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  const update = {
-    $pull: { name, about },
-  };
+  const update = { name, about };
   const opts = {
     new: true,
     runValidators: true,
@@ -81,9 +79,7 @@ module.exports.updateProfile = (req, res, next) => {
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const update = {
-    $pull: { avatar },
-  };
+  const update = { avatar };
   const opts = {
     new: true,
     runValidators: true,
