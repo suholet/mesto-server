@@ -1,4 +1,5 @@
 const Card = require('../models/card');
+const CardNotFoundError = require('../errors/cardNotFoundError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -33,7 +34,8 @@ module.exports.deleteCard = (req, res, next) => {
   // { _id: req.params.cardId, owner: req.user._id }
   Card.findById(req.params.cardId)
     .orFail(() => {
-      res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+      throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+      // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
     })
     .then((card) => {
       if (card.owner.equals(req.user._id)) {
@@ -62,7 +64,8 @@ module.exports.likeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+        throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
@@ -84,7 +87,8 @@ module.exports.dislikeCard = (req, res, next) => {
       if (card) {
         res.send({ data: card });
       } else {
-        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+        throw new CardNotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
