@@ -54,8 +54,12 @@ app.use('*', auth, router);
 // 500 error handler
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  // console.error(err.stack);
-  res.status(500).send({ message: err.message });
+  const statusCode = err.statusCode || 500;
+
+  res.status(statusCode).send({
+    message: statusCode === 500 ? 'Произошла ошибка' : err.message,
+  });
+  // res.status(500).send({ message: err.message });
 });
 
 // app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
