@@ -59,7 +59,7 @@ module.exports.createUser = (req, res, next) => {
     ))
     .catch((err) => {
       if (err.code === 11000) {
-        throw new AlreadyExistError(err.errmsg);
+        next(new AlreadyExistError(err.errmsg));
         // res.status(409).send({ message: err.errmsg });
       } else {
         next(err);
@@ -97,7 +97,7 @@ module.exports.updateAvatar = (req, res, next) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -117,7 +117,7 @@ module.exports.login = (req, res) => {
       // res.send({ token });
     })
     .catch((err) => {
-      throw new UnathorizedError(err.message);
+      next(new UnathorizedError(err.message));
       // res.status(401).send({ message: err.message });
     });
 };
