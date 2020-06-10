@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
-const UnathorizedError = require('../errors/unathorizedError');
+// const UnathorizedError = require('../errors/unathorizedError');
 const AlreadyExistError = require('../errors/alreadyExistError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -116,8 +116,9 @@ module.exports.login = (req, res, next) => {
         .end();
       // res.send({ token });
     })
-    .catch((err) => {
-      next(new UnathorizedError(err.message));
-      // res.status(401).send({ message: err.message });
-    });
+    .catch(next);
+  // .catch((err) => {
+  //   next(new UnathorizedError(err.message));
+  //   // res.status(401).send({ message: err.message });
+  // });
 };
