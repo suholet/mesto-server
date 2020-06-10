@@ -1,11 +1,12 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/notFoundError');
+const AccessDeniedError = require('../errors/accessDeniedError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send(cards))
     .catch((err) => {
-      console.log('Что-то пошло не так при загрузке карточек. ', err);
       next(err);
     });
 };
@@ -26,22 +27,27 @@ module.exports.createCard = (req, res, next) => {
   })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      console.log('Что-то пошло не так при создании карточки. ', err);
       next(err);
     });
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove({ _id: req.params.cardId })
+  // { _id: req.params.cardId, owner: req.user._id }
+  Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+      // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+    })
     .then((card) => {
-      if (card) {
+      if (card.owner.equals(req.user._id)) {
+        card.remove();
         res.send({ data: card });
       } else {
-        res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
+        throw new AccessDeniedError(`У вас нет прав на удаление карточки с id:${req.params.cardId}!`);
+        // res.status(403).send({ message: `нет прав на удаление карточки!`});
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при удалении карточки. ', err);
       next(err);
     });
 };
@@ -57,15 +63,14 @@ module.exports.likeCard = (req, res, next) => {
   };
   Card.findByIdAndUpdate(req.params.cardId, update, opts)
     .then((card) => {
-      console.log(card);
       if (card) {
         res.send({ data: card });
       } else {
-        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+        throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при лайке карточки. ', err);
       next(err);
     });
 };
@@ -81,15 +86,14 @@ module.exports.dislikeCard = (req, res, next) => {
   };
   Card.findByIdAndUpdate(req.params.cardId, update, opts)
     .then((card) => {
-      console.log(card);
       if (card) {
         res.send({ data: card });
       } else {
-        throw new Error(`Карточки с id:${req.params.cardId} не существует!`);
+        throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
+        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
     .catch((err) => {
-      console.log('Что-то пошло не так при дизлайке карточки. ', err);
       next(err);
     });
 };
