@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -43,8 +44,10 @@ app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 app.use('*', auth, router);
 
+// Обработчик ошибок celebrate
+app.use(errors());
 
-// 500 error handler
+// Централизованный обработчик ошибок
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
