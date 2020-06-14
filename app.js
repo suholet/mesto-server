@@ -9,8 +9,8 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const router = require('./routes/router');
 const { createUser, login } = require('./controllers/users');
-
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 require('dotenv').config();
 
@@ -36,6 +36,9 @@ mongoose.connect(DATABASE_URL, {
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Подключаем логгер запросов
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   headers: Joi.object().keys({
@@ -67,6 +70,9 @@ createUser);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 app.use('*', auth, router);
+
+// Подключаем логгер ошибок
+app.use(errorLogger);
 
 // Обработчик ошибок celebrate
 app.use(errors());
