@@ -33,7 +33,9 @@ usersRouter.patch('/me/avatar', celebrate({
     'content-type': Joi.string().required().regex(/application\/json/),
   }).unknown(true),
   body: Joi.object().keys({
-    avatar: Joi.string().required().uri(),
+    avatar: Joi.string().required().uri({
+      scheme: ['http', 'https'],
+    }),
   }),
 }),
 updateAvatar);

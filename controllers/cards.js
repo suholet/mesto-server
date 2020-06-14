@@ -12,6 +12,7 @@ module.exports.getCards = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   const {
     name,
+    about,
     link,
     likes,
     owner = req.user._id,
@@ -19,6 +20,7 @@ module.exports.createCard = (req, res, next) => {
 
   Card.create({
     name,
+    about,
     link,
     likes,
     owner,

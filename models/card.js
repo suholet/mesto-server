@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
+const { isURL } = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
+  },
+  about: {
     type: String,
     required: true,
     minlength: 2,
@@ -12,7 +19,8 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
+        return isURL(v);
+        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
       },
       message: (props) => `${props.value} is not a valid link!`,
     },
