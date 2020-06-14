@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
@@ -37,8 +37,32 @@ mongoose.connect(DATABASE_URL, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  headers: Joi.object().keys({
+    'content-type': Joi.string().required().regex(/application\/json/),
+  }).unknown(true),
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}),
+login);
+
+app.post('/signup', celebrate({
+  headers: Joi.object().keys({
+    'content-type': Joi.string().required().regex(/application\/json/),
+  }).unknown(true),
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required().uri({
+      scheme: ['http', 'https'],
+    }),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}),
+createUser);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
