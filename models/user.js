@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        // return /^(ftp|http|https):\/\/[^ "]+$/.test(v);
         return isURL(v);
       },
       message: (props) => `${props.value} is not a valid link!`,

@@ -36,13 +36,6 @@ mongoose.connect(DATABASE_URL, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// temporary auth stub
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '5ecaa4322383ec8133d124a3',
-//   };
-//   next();
-// });
 app.post('/signin', login);
 app.post('/signup', createUser);
 
@@ -59,8 +52,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({
     message: statusCode === 500 ? 'Произошла ошибка' : err.message,
   });
-  // res.status(500).send({ message: err.message });
 });
 
-// app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
-app.listen(PORT);
+// eslint-disable-next-line no-console
+app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
