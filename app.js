@@ -3,13 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { celebrate, Joi, errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const router = require('./routes/router');
 const { createUser, login } = require('./controllers/users');
-
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 require('dotenv').config();
 
@@ -36,22 +37,54 @@ mongoose.connect(DATABASE_URL, {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// temporary auth stub
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '5ecaa4322383ec8133d124a3',
-//   };
-//   next();
-// });
-app.post('/signin', login);
-app.post('/signup', createUser);
+// Подключаем логгер запросов
+app.use(requestLogger);
+
+// Временный тест для проверки сервера на запуск после падения
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
+app.post('/signin', celebrate({
+  headers: Joi.object().keys({
+    'content-type': Joi.string().required().regex(/application\/json/),
+  }).unknown(true),
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}),
+login);
+
+app.post('/signup', celebrate({
+  headers: Joi.object().keys({
+    'content-type': Joi.string().required().regex(/application\/json/),
+  }).unknown(true),
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required().uri({
+      scheme: ['http', 'https'],
+    }),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}),
+createUser);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 app.use('*', auth, router);
 
+// Подключаем логгер ошибок
+app.use(errorLogger);
 
-// 500 error handler
+// Обработчик ошибок celebrate
+app.use(errors());
+
+// Централизованный обработчик ошибок
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -59,8 +92,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({
     message: statusCode === 500 ? 'Произошла ошибка' : err.message,
   });
-  // res.status(500).send({ message: err.message });
 });
 
-// app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));
-app.listen(PORT);
+// eslint-disable-next-line no-console
+app.listen(PORT, () => console.log(`App listening at http://localhost:${PORT}`));

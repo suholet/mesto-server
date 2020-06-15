@@ -6,9 +6,7 @@ module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send(cards))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -26,17 +24,13 @@ module.exports.createCard = (req, res, next) => {
     owner,
   })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  // { _id: req.params.cardId, owner: req.user._id }
   Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
-      // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
     })
     .then((card) => {
       if (card.owner.equals(req.user._id)) {
@@ -44,12 +38,9 @@ module.exports.deleteCard = (req, res, next) => {
         res.send({ data: card });
       } else {
         throw new AccessDeniedError(`У вас нет прав на удаление карточки с id:${req.params.cardId}!`);
-        // res.status(403).send({ message: `нет прав на удаление карточки!`});
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -67,12 +58,9 @@ module.exports.likeCard = (req, res, next) => {
         res.send({ data: card });
       } else {
         throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
-        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -90,10 +78,7 @@ module.exports.dislikeCard = (req, res, next) => {
         res.send({ data: card });
       } else {
         throw new NotFoundError(`Карточки с id:${req.params.cardId} не существует!`);
-        // res.status(404).send({ message: `Карточки с id:${req.params.cardId} не существует!` });
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };

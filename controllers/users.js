@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
-// const UnathorizedError = require('../errors/unathorizedError');
 const AlreadyExistError = require('../errors/alreadyExistError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -10,9 +9,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.getUser = (req, res, next) => {
@@ -20,14 +17,11 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => {
       if (!user || !user.length) {
         throw new NotFoundError('Нет пользователя с таким id');
-        // res.status(404).send({ message: 'Нет пользователя с таким id' });
       } else {
         res.send(user);
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -60,7 +54,6 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new AlreadyExistError(err.errmsg));
-        // res.status(409).send({ message: err.errmsg });
       } else {
         next(err);
       }
@@ -77,9 +70,7 @@ module.exports.updateProfile = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, update, opts)
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -92,9 +83,7 @@ module.exports.updateAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(req.user._id, update, opts)
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.login = (req, res, next) => {
@@ -114,11 +103,6 @@ module.exports.login = (req, res, next) => {
         sameSite: true,
       })
         .end();
-      // res.send({ token });
     })
     .catch(next);
-  // .catch((err) => {
-  //   next(new UnathorizedError(err.message));
-  //   // res.status(401).send({ message: err.message });
-  // });
 };
